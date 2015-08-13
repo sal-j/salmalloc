@@ -2,10 +2,12 @@ CC = gcc
 
 SRC = salmalloc.c 
 EXE = salmalloc
+BUILDDIR = build
+
 
 EXE : $(SRC)
-	$(CC) $(SRC) -o $(EXE)
+	$(CC) $(SRC) -o $(BUILDDIR)/$(EXE)
 
 
 clean :
-	rm *.o *~ *# salmalloc
+	rm build/*.o build/*~ build/*# build/salmalloc
