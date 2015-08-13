@@ -3,10 +3,10 @@ CC = gcc
 SRC = salmalloc.c 
 EXE = salmalloc
 BUILDDIR = build
+SRCDIR = src
 
-
-EXE : $(SRC)
-	$(CC) $(SRC) -o $(BUILDDIR)/$(EXE)
+EXE : $(SRCDIR)/$(SRC)
+	$(CC) $(SRCDIR)/$(SRC) -o $(BUILDDIR)/$(EXE)
 
 
 clean :
