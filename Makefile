@@ -4,9 +4,11 @@ SRC = salmalloc.c
 EXE = salmalloc
 BUILDDIR = build
 SRCDIR = src
+INCLUDEDIR = include
+CFLAGS = -I
 
 EXE : $(SRCDIR)/$(SRC)
-	$(CC) $(SRCDIR)/$(SRC) -o $(BUILDDIR)/$(EXE)
+	$(CC) $(CFLAGS)$(INCLUDEDIR) $(SRCDIR)/$(SRC) -o $(BUILDDIR)/$(EXE)
 
 
 clean :
