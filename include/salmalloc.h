@@ -1,5 +1,5 @@
-
 #include <stdlib.h>
+
 
 #define ZERO 0
 #define TEN 10
@@ -34,4 +34,8 @@ typedef struct List {
   size_t length;
 }sList;
 
+
+
+extern void *salmalloc(size_t);
+extern void salfree(void *);
 

@@ -1,15 +1,18 @@
 CC = gcc
 
-SRC = salmalloc.c 
+SRC1 = salmalloc.c
+SRC2 = main.c
 EXE = salmalloc
+OBJ = salmalloc.o
 BUILDDIR = build
 SRCDIR = src
-INCLUDEDIR = include
+INCLUDE_DIR = include
 CFLAGS = -I
 
+
 EXE : $(SRCDIR)/$(SRC)
-	$(CC) $(CFLAGS)$(INCLUDEDIR) $(SRCDIR)/$(SRC) -o $(BUILDDIR)/$(EXE)
+	$(CC) $(CFLAGS)$(INCLUDE_DIR) $(SRCDIR)/$(SRC1) $(SRCDIR)/$(SRC2) -o $(BUILDDIR)/$(EXE)
 
 
 clean :
-	rm build/*.o build/*~ build/*# build/salmalloc
+	rm build/*.o build/*~ build/*# build/salmalloc src/*~
