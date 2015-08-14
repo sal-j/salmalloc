@@ -5,7 +5,7 @@
 #define TEN 10
 #define HUNDRED 100
 #define THOUSAND 1000
-
+#define THREE 3
 
 
 typedef struct mem_blk_seg {
@@ -24,14 +24,13 @@ typedef struct Node {
   struct sNode *next;
   void *memSegment;
   size_t magicVal;
-  nodeType vNodeType;
 }sNode;
-
 
 
 typedef struct List {
   sNode *head;
   size_t length;
+  sNode vPrevNodes[THREE];
 }sList;
 
 
