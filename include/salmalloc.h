@@ -24,17 +24,21 @@ typedef struct Node {
   struct sNode *next;
   void *memSegment;
   size_t magicVal;
+  void *specialNode;
+  nodeType vNodeType;
 }sNode;
 
 
 typedef struct List {
   sNode *head;
   size_t length;
-  sNode vPrevNodes[THREE];
+  sNode *tens;
+  sNode *hundreds;
+  sNode *thousands;
 }sList;
 
 
 
 extern void *salmalloc(size_t);
 extern void salfree(void *);
-
+extern void print_salmalloc();
