@@ -63,21 +63,14 @@ extern void *salmalloc(size_t size)
     
     sNode *temp = memlist.head, *prev = NULL, *newNode = NULL;
     
-    printf("second node.\n");
-    
     /* Go to the last node */
     while(temp->next != NULL) {
       prev = temp;
       temp = (sNode *) temp->next;
-      printf("I am here.");
     }    
     
-    printf("ends.\n");
-
     /* Get end of heap */
     seg = (smem_blk_seg *) sbrk(0);
-
-    printf("memlist length is 1.\n");    
 
     if (memlist.length == 1) {
       sNode *newNode1 = NULL;
@@ -145,8 +138,6 @@ extern void *salmalloc(size_t size)
       
    }
     
-    printf("third node added.\n");
-
     /* return memory segment */
     return temp->memSegment + sizeof(smem_blk_seg);
   }
