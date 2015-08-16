@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "salmalloc.h"
+
 sList memlist = {0};
 
 /*
@@ -23,7 +24,53 @@ sList memlist = {0};
 	**************************
 */
 
+extern void link_skip_nodes(sNode *temp)
+{
+    /* Set node type. */
+    if (memlist.length % HUNDRED == ZERO) {
+      temp->vNodeType = eHundreds;
+    } else if (memlist.length % TEN == ZERO) {
+      temp->vNodeType = eTens;
+      
+      if (memlist.length == TEN) {
 
+	/*
+	  a -> fwd_special = j;
+	  j -> prev_special = a;
+	  a -> prev_special = j;
+	  j -> fwd_special = a;
+	  memlist.tensSpecial = j;
+	 */
+
+	memlist.head->skipNodes.fwd_tenSpecialNode = temp;
+	memlist.head->skipNodes.prev_tenSpecialNode = temp;
+
+	temp->skipNodes.prev_tenSpecialNode = memlist.head;
+	temp->skipNodes.fwd_tenSpecialNode = memlist.head;
+
+	memlist.skipNodes.prev_tenSpecialNode = temp;
+      } else {
+
+	/*
+	    prev = memlist.tenSpecial
+	    temp -> prev_special = prev;
+	    temp -> fwd_special  = head;
+
+	    prev -> fwd_special  = temp;
+	    memlist.tenSpecial   = temp;
+
+	*/
+
+	sNode *prev = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
+
+	temp->skipNodes.prev_tenSpecialNode = (void*)prev;	
+	temp->skipNodes.fwd_tenSpecialNode = (void*)memlist.head;
+
+	prev->skipNodes.fwd_tenSpecialNode = (void*)temp;
+	memlist.skipNodes.prev_tenSpecialNode = temp;
+      }
+   }
+}
 
 /*
   Function to add a node to linked list. 
@@ -124,19 +171,7 @@ extern void *salmalloc(size_t size)
     /* extend length of list. */
     memlist.length++;
 
-    /* Set node type. */
-    if (memlist.length % HUNDRED == ZERO) {
-      temp->vNodeType = eHundreds;
-    } else if (memlist.length % TEN == ZERO) {
-      temp->vNodeType = eTens;
-      
-    if (memlist.length == 9) {
-      memlist.head->specialNode = temp;
-      temp->specialNode = memlist.head;
-      memlist.tens = temp;
-    }
-      
-   }
+    link_skip_nodes(temp);
     
     /* return memory segment */
     return temp->memSegment + sizeof(smem_blk_seg);
@@ -167,4 +202,27 @@ extern void print_salmalloc()
     temp = (sNode* ) temp->next;
   }
 
+}
+
+
+extern void print_skip_nodes(nodeType type)
+{
+  if (type == eTens) {
+    size_t i = 5;
+    sNode *temp = memlist.head;    
+
+    while (i > 0) {
+      char *ch = temp->memSegment + sizeof(smem_blk_seg);
+      printf("i == %d and ch: %c.\n", i, *ch);
+      temp = temp->skipNodes.fwd_tenSpecialNode;
+      //printf("%p.\n", temp->memSegment + sizeof(smem_blk_seg));
+      i--;
+    }
+
+  }
+}
+
+extern size_t get_length()
+{
+  return memlist.length;
 }
