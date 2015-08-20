@@ -226,3 +226,17 @@ extern size_t get_length()
 {
   return memlist.length;
 }
+
+extern sNode* copy_list()
+{
+  return memlist.head;
+}
+
+extern void copy_list_1(sNode *temp)
+{
+  temp = (sNode*) memlist.head;
+  char *ch = temp->memSegment + sizeof(smem_blk_seg);
+  printf("ch: %p.\n",  temp->memSegment + sizeof(smem_blk_seg));
+
+}
+

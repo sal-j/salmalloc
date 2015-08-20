@@ -57,3 +57,5 @@ extern void print_salmalloc();
 extern void link_skip_nodes(sNode*);
 extern void print_skip_nodes(nodeType);
 extern size_t get_length();
+extern sNode* copy_list();
+extern void copy_list_1(sNode*);
