@@ -34,7 +34,7 @@ extern void link_skip_nodes(sNode *temp)
       
       if (memlist.length == TEN) {
 
-	/*
+       	/*
 	  a -> fwd_special = j;
 	  j -> prev_special = a;
 	  a -> prev_special = j;
@@ -49,6 +49,12 @@ extern void link_skip_nodes(sNode *temp)
 	temp->skipNodes.fwd_tenSpecialNode = memlist.head;
 
 	memlist.skipNodes.prev_tenSpecialNode = temp;
+	
+	memlist.head->numNodesAhead = TEN;
+	temp->numNodesAhead = EMPTY;
+
+	memlist.head->vNodeType = eTens;
+
       } else {
 
 	/*
@@ -58,7 +64,6 @@ extern void link_skip_nodes(sNode *temp)
 
 	    prev -> fwd_special  = temp;
 	    memlist.tenSpecial   = temp;
-
 	*/
 
 	sNode *prev = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
@@ -72,6 +77,9 @@ extern void link_skip_nodes(sNode *temp)
    }
 }
 
+
+
+
 /*
   Function to add a node to linked list. 
   @param size is the size of the object.
@@ -80,9 +88,12 @@ extern void link_skip_nodes(sNode *temp)
 extern void *salmalloc(size_t size)
 {
   smem_blk_seg *seg = NULL; /* memory segment  */
+  void *sNodeLocation = NULL;
 
   /* If list is currently NULL add a new node. */
   if (memlist.head == NULL) {
+
+    sNodeLocation = (void*) sbrk(0);
 
     /* extend heap by sNode */
     memlist.head = (sNode *)sbrk(sizeof(sNode));
@@ -98,9 +109,11 @@ extern void *salmalloc(size_t size)
     /* Extend heap */
     memlist.head->memSegment = (void *)sbrk(size + sizeof(smem_blk_seg));
 
-    memlist.head->magicVal = 90;
-    seg->isFree = 123;
+    seg->isFree = FALSE;
     seg->size = size;
+
+    seg->locationOfsNode = sNodeLocation;
+    memlist.head->numNodesAhead = EMPTY;
 
     memlist.head->next = NULL;
     memlist.length = 1;
@@ -110,6 +123,21 @@ extern void *salmalloc(size_t size)
     
     sNode *temp = memlist.head, *prev = NULL, *newNode = NULL;
     
+    printf("head type: %d.\n", temp->vNodeType);
+
+    if (whereToInsertNode(temp) == TRUE) {
+      size_t count = 0;
+      smem_blk_seg *seg1 = temp->memSegment;
+
+      while(seg1->isFree == FALSE) {
+	temp = (sNode*) temp->next;
+	seg1 = temp->memSegment;
+      }
+
+      seg1->isFree = FALSE;
+      return temp->memSegment + sizeof(smem_blk_seg);
+    }
+
     /* Go to the last node */
     while(temp->next != NULL) {
       prev = temp;
@@ -118,7 +146,8 @@ extern void *salmalloc(size_t size)
     
     /* Get end of heap */
     seg = (smem_blk_seg *) sbrk(0);
-
+    sNodeLocation = (void *) sbrk(0);
+    
     if (memlist.length == 1) {
       sNode *newNode1 = NULL;
 
@@ -136,12 +165,16 @@ extern void *salmalloc(size_t size)
       /* Extend heap */
       newNode1->memSegment = (void *)sbrk(size + sizeof(smem_blk_seg));
 
-      newNode1->magicVal = 90;
-      seg->isFree = 123;
+      seg->isFree = FALSE;
       seg->size = size;
+      seg->locationOfsNode = sNodeLocation;
 
-      memlist.head->next = (struct sNode*)newNode1;
+
+      memlist.head->next = (struct sNode*) newNode1;
       memlist.length = 2;
+
+      temp->vNodeType = eNormal;
+
       /* return start of our memory segment. */
       return newNode1->memSegment + sizeof(smem_blk_seg);       
     }
@@ -162,14 +195,17 @@ extern void *salmalloc(size_t size)
     /* Allocate memory */
     temp->memSegment = (void *) sbrk(size + sizeof(smem_blk_seg));
     
-    seg->isFree = 129;
+    seg->isFree = FALSE;
     seg->size = size;
-    
+    seg->locationOfsNode = sNodeLocation;
+
     /* set next node to nULL */
     temp->next = NULL;
 
     /* extend length of list. */
     memlist.length++;
+
+    temp->vNodeType = eNormal;
 
     link_skip_nodes(temp);
     
@@ -178,13 +214,86 @@ extern void *salmalloc(size_t size)
   }
 }
 
+extern size_t whereToInsertNode(sNode *temp)
+{
+  if (temp->vNodeType == eTens) {
+    if ((temp->numNodesAhead > EMPTY) && (temp->numNodesAhead < TEN)) {
+      printf("I am here. numNodesAhead: %d\n", temp->numNodesAhead);
+      return TRUE;
+    }
+  } 
+
+  return FALSE;
+}
+
+extern void *skipSalmalloc(size_t size)
+{
+  smem_blk_seg *seg = NULL; /* memory segment  */
+
+  /* If list is currently NULL add a new node. */
+  if (memlist.head == NULL) {
+
+    /* extend heap by sNode */
+    memlist.head = (sNode *)sbrk(sizeof(sNode));
+
+    /* 
+       Get current end of heap.
+       Algorithm is: sNode + mem_seg. sNode carries 
+       metadata about the mem_seg, for example if it
+       is free or not.
+    */
+    seg = (smem_blk_seg *)sbrk(0);
+
+    /* Extend heap */
+    memlist.head->memSegment = (void *)sbrk(size + sizeof(smem_blk_seg));
+
+
+    seg->isFree = 123;
+    seg->size = size;
+
+    SET_NODE_SIZE(memlist.head, size);
+
+    memlist.head->next = NULL;
+    memlist.length = 1;
+
+    /* return start of our memory segment. */
+    return memlist.head->memSegment + sizeof(smem_blk_seg);
+
+  } else {  
+    sNode *temp = memlist.head;
+  }
+}
+
+
 extern void salfree (void *ptr) 
 {
   smem_blk_seg *seg = (ptr - sizeof(smem_blk_seg));
+  sNode *temp = NULL;
 
   //printf("\n  freed ptr is at : 0x%x \n", seg);
 
-  printf("%d \n", seg->isFree);
+  printf("location of sNode: %p. %d \n", seg->locationOfsNode, seg->isFree);
+
+  seg->isFree = TRUE;
+
+  printf("location of sNode: %p. %d \n", seg->locationOfsNode, seg->isFree);
+
+
+  temp = seg->locationOfsNode;
+  
+  printf("type of node: %d.\n", temp->vNodeType);
+
+  if (temp->vNodeType == eNormal) {
+    while(temp->vNodeType != eTens) {
+      temp = (sNode*) temp->next;
+    }
+  }
+
+  temp = temp->skipNodes.fwd_tenSpecialNode;
+  
+   
+  printf("Nodes ahead before deletion: %d and Nodes ahead now: %d.\n", temp->numNodesAhead, temp->numNodesAhead--);
+
 }
 
 
@@ -195,7 +304,8 @@ extern void print_salmalloc()
 
   while(temp != NULL) {
     char *ch = temp->memSegment + sizeof(smem_blk_seg);
-    printf("listIndex: %d. character in address %p and print: %c.\n", listIndex, (temp->memSegment) + sizeof(smem_blk_seg), 
+    smem_blk_seg *seg = temp->memSegment;
+    printf("listIndex: %d. Location of sNode: %p. isFree %d. character in address %p and print: %c.\n", listIndex, seg->locationOfsNode, seg->isFree, (temp->memSegment) + sizeof(smem_blk_seg), 
 	 *ch);
 
     listIndex++;
