@@ -98,3 +98,4 @@ extern sNode* copy_list();
 extern void copy_list_1(sNode*);
 extern void *skipSalmalloc(size_t);
 extern size_t whereToInsertNode(sNode*);
+extern void *insert_salmalloc(size_t);

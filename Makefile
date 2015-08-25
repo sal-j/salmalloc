@@ -1,16 +1,16 @@
-CC = gcc
+B1;3409;0cCC = gcc
 LIB_NAME = salmalloc
 SRC1 = salmalloc.c
 SRC2 = main.c
-TSTS = Test_Nodes_Ahead.c
-EXE = Test_Nodes_Ahead
+TSTS = $(wildcard $(TEST_DIR)/*.c)
+EXE = $(patsubst $(TEST_DIR)/%.c,$(TEST_BUILD)/%, $(TSTS))
 SHARED_LIB_0 = salmalloc.o
 BUILDDIR = build
 SRCDIR = src
 INCLUDE_DIR = include
 TEST_DIR = tests
-TEST_BUILD = tests/build/
-SHARED_LIB_DIR = /home/salman/projects/salmalloc/build/
+TEST_BUILD = tests/build
+SHARED_LIB_DIR = /home/salman/projects/salmalloc/build
 CFLAGS_INCLUDE = -I
 CFLAGS_C = -c
 CFLAGS_OUT = -o
@@ -21,10 +21,12 @@ LIB_0 = libsalmalloc.so
 
 
 
-$(EXE): $(LIB_0) 
-	$(CC) $(CFLAGS_SHARED_LIB)$(SHARED_LIB_DIR) $(CFLAGS_INCLUDE)$(INCLUDE_DIR) $(TEST_DIR)/$(TSTS) $(CFLAGS_OUT) $(TEST_BUILD)/$(EXE) $(CFLAGS_LIBS_FLAG)$(LIB_NAME)
+all: $(EXE)
 
-$(LIB_0): $(SHARED_LIB_0)
+$(TEST_BUILD)/%: $(TEST_DIR)/%.c
+	$(CC) $(CFLAGS_SHARED_LIB)$(SHARED_LIB_DIR) $(CFLAGS_INCLUDE)$(INCLUDE_DIR) $< $(CFLAGS_OUT) $@ $(CFLAGS_LIBS_FLAG)$(LIB_NAME)
+
+$(TSTS): $(SHARED_LIB_0)
 	$(CC) $(CFLAGS_SHARED) $(BUILDDIR)/$(SHARED_LIB_0) $(CFLAGS_OUT) $(BUILDDIR)/$(LIB_0)
 
 $(SHARED_LIB_0) : $(SRCDIR)/$(SRC)

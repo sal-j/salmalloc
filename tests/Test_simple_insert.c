@@ -23,7 +23,7 @@ int main ()
   
   copy_list_1(temp);
 
-  printf("after: %p.\n", *(sNode*)(temp->memSegment + sizeof(smem_blk_seg)));
+  printf("after: %p.\n", (temp->memSegment + sizeof(smem_blk_seg)));
 
   temp = copy_list();
 
