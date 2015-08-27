@@ -8,6 +8,8 @@ void main ()
   char *a, *b, *c, *d, *e, *f, *g, *h, *i, *j, *k, *l, *m, *n, *o, *p, *q, *r, *s, *t;
   char *ka, *la, *ma, *na, *oa, *pa, *qa, *ra, *sa, *ta;
   
+  int *aInt;
+  
   //printf("\n  p : 0x%x \n", p);
 
   //p =  (int *)salmalloc(sizeof(int));
@@ -47,8 +49,11 @@ void main ()
   print_salmalloc();
 
 
-  j = (char *) salmalloc(sizeof(char));
-  *j = 'k';
+  aInt = (int *) salmalloc(sizeof(int));
+  *aInt = 12;
+
+  printf("length: %d.\n", get_length());
+
   
   print_salmalloc();
 

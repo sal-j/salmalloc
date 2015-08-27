@@ -145,9 +145,13 @@ extern void *salmalloc(size_t size)
 	temp = (sNode*) temp->next;
 	seg1 = temp->memSegment;
       }
+      
 
-      seg1->isFree = FALSE;
-      return temp->memSegment + sizeof(smem_blk_seg);
+      if (seg1->size >= size) {	
+      printf("seg size: %d and size: %d.\n", seg1->size, size);
+	seg1->isFree = FALSE;
+	return temp->memSegment + sizeof(smem_blk_seg);
+      }
     }
 
     /* Go to the last node */
@@ -269,7 +273,6 @@ extern void print_salmalloc()
     smem_blk_seg *seg = temp->memSegment;
     printf("listIndex: %d. Location of sNode: %p. isFree %d. character in address %p and print: %c.\n", listIndex, seg->locationOfsNode, seg->isFree, (temp->memSegment) + sizeof(smem_blk_seg), 
 	 *ch);
-
     listIndex++;
     temp = (sNode* ) temp->next;
   }
