@@ -136,7 +136,6 @@ extern void *salmalloc(size_t size)
     
     sNode *temp = memlist.head, *prev = NULL, *newNode = NULL;
     
-
     if (whereToInsertNode(temp) == TRUE) {
       size_t count = 0;
       smem_blk_seg *seg1 = temp->memSegment;
@@ -146,9 +145,8 @@ extern void *salmalloc(size_t size)
 	seg1 = temp->memSegment;
       }
       
-
       if (seg1->size >= size) {	
-      printf("seg size: %d and size: %d.\n", seg1->size, size);
+	printf("seg size: %d and size: %d.\n", seg1->size, size);
 	seg1->isFree = FALSE;
 	return temp->memSegment + sizeof(smem_blk_seg);
       }
@@ -192,62 +190,14 @@ extern size_t whereToInsertNode(sNode *temp)
   return FALSE;
 }
 
-extern void *skipSalmalloc(size_t size)
-{
-  smem_blk_seg *seg = NULL; /* memory segment  */
-
-  /* If list is currently NULL add a new node. */
-  if (memlist.head == NULL) {
-
-    /* extend heap by sNode */
-    memlist.head = (sNode *)sbrk(sizeof(sNode));
-
-    /* 
-       Get current end of heap.
-       Algorithm is: sNode + mem_seg. sNode carries 
-       metadata about the mem_seg, for example if it
-       is free or not.
-    */
-    seg = (smem_blk_seg *)sbrk(0);
-
-    /* Extend heap */
-    memlist.head->memSegment = (void *)sbrk(size + sizeof(smem_blk_seg));
-
-
-    seg->isFree = 123;
-    seg->size = size;
-
-    SET_NODE_SIZE(memlist.head, size);
-
-    memlist.head->next = NULL;
-    memlist.length = 1;
-
-    /* return start of our memory segment. */
-    return memlist.head->memSegment + sizeof(smem_blk_seg);
-
-  } else {  
-    sNode *temp = memlist.head;
-  }
-}
-
-
 extern void salfree (void *ptr) 
 {
   smem_blk_seg *seg = (ptr - sizeof(smem_blk_seg));
   sNode *temp = NULL;
 
-  //printf("\n  freed ptr is at : 0x%x \n", seg);
-
-  printf("location of sNode: %p. %d \n", seg->locationOfsNode, seg->isFree);
-
   seg->isFree = TRUE;
 
-  printf("location of sNode: %p. %d \n", seg->locationOfsNode, seg->isFree);
-
-
   temp = seg->locationOfsNode;
-  
-  printf("type of node: %d.\n", temp->vNodeType);
 
   if (temp->vNodeType == eNormal) {
     while(temp->vNodeType != eTens) {
@@ -256,10 +206,6 @@ extern void salfree (void *ptr)
   }
 
   temp = temp->skipNodes.fwd_tenSpecialNode;
-  
-   
-  printf("Nodes ahead before deletion: %d and Nodes ahead now: %d.\n", temp->numNodesAhead, temp->numNodesAhead--);
-
 }
 
 

@@ -18,12 +18,6 @@ int main ()
   *d = 'd';
 
   print_salmalloc();
-  
-  printf("initial: %p.\n", temp);
-  
-  copy_list_1(temp);
-
-  printf("after: %p.\n", (temp->memSegment + sizeof(smem_blk_seg)));
 
   temp = copy_list();
 
@@ -33,15 +27,18 @@ int main ()
 
     char *ch = temp->memSegment + sizeof(smem_blk_seg);
 
-    //printf("ch: %p.\n", temp->memSegment + sizeof(smem_blk_seg));
+    printf("ch adress: %p and val %c.\n", temp->memSegment + sizeof(smem_blk_seg), *ch);
 
-    /*if (*ch != 'a' || *ch != 'b' || *ch != 'c' || *ch != 'd') {
-      printf("ERROR: Test failed.\n");
+    if (*ch == 'a' || *ch == 'b' || *ch == 'c' || *ch == 'd') {
+    } else {
+      printf("ERROR: Test failed. \n");
       return -1;
-      }*/
+    }
     
     temp = (sNode*)temp->next;
   }
+
+  printf("Test passed.\n");
 
   return 0;
 }

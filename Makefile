@@ -1,4 +1,4 @@
-B1;3409;0cCC = gcc
+CC = gcc
 LIB_NAME = salmalloc
 SRC1 = salmalloc.c
 SRC2 = main.c
