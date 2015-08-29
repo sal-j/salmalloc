@@ -12,7 +12,6 @@ ssize_t testList() \n\
 		ssize_t count = 0;\n\
        		while(temp != NULL) {\n\
        			ssize_t *compare = temp->memSegment + sizeof(smem_blk_seg);\n\
-        		printf("value at this location is: %zd.\\n", *compare);\n\
 			if (*compare != count) {\n\
 				printf("Test failed at count %zd when compare was %zd.\\n", count, *compare);\n\
        				return FALSE;\n\
@@ -26,10 +25,26 @@ ssize_t testList() \n\
         writeFile.write(testList)
 
 
+        testSkipNodes = '\n\
+ssize_t testSkipNodes()\n\
+{\n\
+        size_t i = 0;\n\
+        sNode *temp = copy_list();\n\
+        while (temp != NULL) {\n\
+        	int ch = temp->numNodesAhead;\n\
+	        printf("i == %zu and ch: %zd.\\n", i, ch);\n\
+		temp = temp->skipNodes.fwd_tenSpecialNode;\n\
+        	i++;\n\
+        }\n\
+        return TRUE;\n\
+}\n\n\n'
+
+        writeFile.writelines(testSkipNodes)
+
         # main defined
         writeFile.write('int main()' + '\n' + '{' + '\n')
 
-        maxCount = 101
+        maxCount = 105
         # declare variables
         for i in range(0, maxCount):
             if i is 0:
@@ -54,7 +69,9 @@ ssize_t testList() \n\
 
         # close bracket and end
         writeFile.write('\tprintf("Test was successful.\\n");\n\n')
+        writeFile.write('\ttestSkipNodes();\n\n')
         writeFile.write('\treturn TRUE;\n\n')
+
         writeFile.write('}' + '\n\n\n')
 
 

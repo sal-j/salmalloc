@@ -2,6 +2,8 @@
 
 
 #define ZERO 0
+#define ONE 1
+#define NINE 9
 #define TEN 10
 #define HUNDRED 100
 #define THOUSAND 1000
@@ -94,6 +96,8 @@ extern void print_salmalloc();
 extern void link_skip_nodes(sNode*);
 extern void print_skip_nodes(nodeType);
 extern size_t get_length();
+extern size_t set_length();
+extern void print_length();
 extern sNode* copy_list();
 extern void copy_list_1(sNode*);
 extern void *skipSalmalloc(size_t);

@@ -28,9 +28,32 @@ extern void link_skip_nodes(sNode *temp)
 {
     /* Set node type. */
     if (memlist.length % HUNDRED == ZERO) {
-      temp->vNodeType = eHundreds;
+
+      if (memlist.length == HUNDRED) {
+	sNode *prev = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
+
+	/* Previous special node points to 100th node
+	   which is also a tenSpecialNode.
+	*/
+	prev->skipNodes.fwd_tenSpecialNode = temp;
+	
+	memlist.head->skipNodes.fwd_hundredSpecialNode = temp;
+	memlist.head->vNodeType = eHundreds;
+	
+	temp->vNodeType = eTens;
+	temp->skipNodes.prev_tenSpecialNode = prev;
+	temp->skipNodes.prev_hundredSpecialNode = memlist.head;
+	temp->skipNodes.fwd_hundredSpecialNode  = NULL;
+
+	memlist.skipNodes.prev_tenSpecialNode = temp;
+
+	temp->numNodesAhead = ZERO;
+      }
+      
     } else if (memlist.length % TEN == ZERO) {
       temp->vNodeType = eTens;
+      
+      printf("In special Node.\n");
       
       if (memlist.length == TEN) {
 
@@ -40,18 +63,18 @@ extern void link_skip_nodes(sNode *temp)
 	  a -> prev_special = j;
 	  j -> fwd_special = a;
 	  memlist.tensSpecial = j;
-	 */
+        */
 
 	memlist.head->skipNodes.fwd_tenSpecialNode = temp;
-	memlist.head->skipNodes.prev_tenSpecialNode = temp;
+	memlist.head->skipNodes.prev_tenSpecialNode = NULL;
 
 	temp->skipNodes.prev_tenSpecialNode = memlist.head;
-	temp->skipNodes.fwd_tenSpecialNode = memlist.head;
+	temp->skipNodes.fwd_tenSpecialNode = NULL;
 
 	memlist.skipNodes.prev_tenSpecialNode = temp;
 	
-	memlist.head->numNodesAhead = TEN;
-	temp->numNodesAhead = EMPTY;
+	//memlist.head->numNodesAhead = ZERO;
+	//temp->numNodesAhead = EMPTY;
 
 	memlist.head->vNodeType = eTens;
 
@@ -68,11 +91,15 @@ extern void link_skip_nodes(sNode *temp)
 
 	sNode *prev = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
 
+	//prev->numNodesAhead = TEN;
+
 	temp->skipNodes.prev_tenSpecialNode = (void*)prev;	
-	temp->skipNodes.fwd_tenSpecialNode = (void*)memlist.head;
+	temp->skipNodes.fwd_tenSpecialNode = NULL;
 
 	prev->skipNodes.fwd_tenSpecialNode = (void*)temp;
 	memlist.skipNodes.prev_tenSpecialNode = temp;
+	
+	temp->numNodesAhead = ZERO;
       }
    }
 }
@@ -126,17 +153,21 @@ extern void *salmalloc(size_t size)
 
     memlist.head = (sNode*) insert_salmalloc(size);
 
-    memlist.head->numNodesAhead = EMPTY;
+    memlist.head->numNodesAhead = ZERO;
 
     memlist.head->next = NULL;
-    memlist.length = 1;
+    memlist.length = ZERO;    
+
+    memlist.skipNodes.prev_tenSpecialNode = memlist.head;
+
     /* return start of our memory segment. */
     return memlist.head->memSegment + sizeof(smem_blk_seg);
+
   } else {
     
-    sNode *temp = memlist.head, *prev = NULL, *newNode = NULL;
+    sNode *temp = memlist.head, *prev = NULL, *specialNode = NULL;
     
-    if (whereToInsertNode(temp) == TRUE) {
+    /*if (whereToInsertNode(temp) == TRUE) {
       size_t count = 0;
       smem_blk_seg *seg1 = temp->memSegment;
 
@@ -150,28 +181,39 @@ extern void *salmalloc(size_t size)
 	seg1->isFree = FALSE;
 	return temp->memSegment + sizeof(smem_blk_seg);
       }
-    }
+    }*/
 
     /* Go to the last node */
     while(temp->next != NULL) {
       prev = temp;
       temp = (sNode *) temp->next;
     }    
-    
-    /* Get end of heap */
-    seg = (smem_blk_seg *) sbrk(0);
-    sNodeLocation = (void *) sbrk(0);
-    
+
     temp->next = (struct sNode *)insert_salmalloc(size);
 
-    /* set next node to nULL */
+    /* set next node to NULL */
     temp = (sNode*) temp->next;
     temp->next = NULL;
 
     /* extend length of list. */
-    memlist.length++;
+    set_length();
 
     link_skip_nodes(temp);
+
+    if (temp->vNodeType == eNormal) {
+      print_length();
+      sNode *aheadNodes = (sNode *) memlist.skipNodes.prev_tenSpecialNode;
+      aheadNodes->numNodesAhead++;
+    }
+
+    /*if (get_length() <= TEN) {
+      memlist.head->numNodesAhead == EMPTY ? memlist.head->numNodesAhead = ONE : memlist.head->numNodesAhead++;
+      printf("numNodes head: %zd.\n", memlist.head->numNodesAhead);
+    } else if (){
+      specialNode = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
+      printf("numNodes newNode: %zd.\n", specialNode->numNodesAhead);
+      specialNode->numNodesAhead == EMPTY ? specialNode->numNodesAhead = ONE : specialNode->numNodesAhead++;
+      }*/
     
     /* return memory segment */
     return temp->memSegment + sizeof(smem_blk_seg);
@@ -248,6 +290,12 @@ extern size_t get_length()
   return memlist.length;
 }
 
+extern size_t set_length()
+{
+  return memlist.length++;
+}
+
+
 extern sNode* copy_list()
 {
   return memlist.head;
@@ -261,3 +309,7 @@ extern void copy_list_1(sNode *temp)
 
 }
 
+extern void print_length()
+{
+  printf("Length of list: %zd.\n", memlist.length);
+}
