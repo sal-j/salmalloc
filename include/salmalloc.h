@@ -85,6 +85,7 @@ typedef struct List {
   sNode *hundreds;
   sNode *thousands;
   skip_list_nodes skipNodes;
+  size_t flagUpdateCurrIsFree;
 }sList;
 
 
@@ -101,5 +102,6 @@ extern void print_length();
 extern sNode* copy_list();
 extern void copy_list_1(sNode*);
 extern void *skipSalmalloc(size_t);
-extern size_t whereToInsertNode(sNode*);
+extern sNode* placeToInsertNode();
 extern void *insert_salmalloc(size_t);
+extern void *parse_eNormal_Nodes(sNode *);

@@ -44,7 +44,7 @@ ssize_t testSkipNodes()\n\
         # main defined
         writeFile.write('int main()' + '\n' + '{' + '\n')
 
-        maxCount = 105
+        maxCount = 100
         # declare variables
         for i in range(0, maxCount):
             if i is 0:
