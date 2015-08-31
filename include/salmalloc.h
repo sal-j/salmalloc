@@ -102,6 +102,6 @@ extern void print_length();
 extern sNode* copy_list();
 extern void copy_list_1(sNode*);
 extern void *skipSalmalloc(size_t);
-extern sNode* placeToInsertNode();
+extern sNode* placeToInsertNode(size_t);
 extern void *insert_salmalloc(size_t);
-extern void *parse_eNormal_Nodes(sNode *);
+extern void *parse_eNormal_Nodes(sNode *, size_t);

@@ -25,6 +25,7 @@ sList memlist = {0};
 */
 
 static void print_mem(sNode*);
+static void print_debug();
 
 extern void link_skip_nodes(sNode *temp)
 {
@@ -32,9 +33,11 @@ extern void link_skip_nodes(sNode *temp)
     if (memlist.length % HUNDRED == ZERO) {
 
       if (memlist.length == HUNDRED) {
+	
 	sNode *prev = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
 
-	/* Previous special node points to 100th node
+	/* 
+	   Previous special node points to 100th node
 	   which is also a tenSpecialNode.
 	*/
 	prev->skipNodes.fwd_tenSpecialNode = temp;
@@ -42,7 +45,7 @@ extern void link_skip_nodes(sNode *temp)
 	memlist.head->skipNodes.fwd_hundredSpecialNode = temp;
 	memlist.head->vNodeType = eHundreds;
 	
-	temp->vNodeType = eTens;
+	temp->vNodeType = eHundreds;
 	temp->skipNodes.prev_tenSpecialNode = prev;
 	temp->skipNodes.prev_hundredSpecialNode = memlist.head;
 	temp->skipNodes.fwd_hundredSpecialNode  = NULL;
@@ -50,8 +53,18 @@ extern void link_skip_nodes(sNode *temp)
 	memlist.skipNodes.prev_tenSpecialNode = temp;
 	
 	temp->numNodesAhead = ZERO;
+
+      } else {
+
+	sNode *prev = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
+	sNode *prevHundred = (sNode*) memlist.skipNodes.prev_hundredSpecialNode;
+	
+	prev->skipNodes.fwd_tenSpecialNode  = temp;
+	temp->skipNodes.prev_tenSpecialNode = prev;
+	
+	temp->vNodeType = eHundreds;
+
       }
-      
     } else if (memlist.length % TEN == ZERO) {
       temp->vNodeType = eTens;
       
@@ -190,14 +203,17 @@ extern void *salmalloc(size_t size)
        2. Node is not free. got to allocate a new one. In this case,
        we need to return the previous node.       
     */
-    temp = placeToInsertNode();
-
+    temp = placeToInsertNode(size);
 
     /* If there is free space. */
     if (memlist.length != ZERO && memlist.flagUpdateCurrIsFree == TRUE) {
+      seg = temp->memSegment;
+      seg->isFree = FALSE;
+      //print_mem(temp);
       return temp->memSegment + sizeof(smem_blk_seg); 
     }
-    
+
+    printf("salman.\n");
     /* First check is useless. Will update later.
        Second check happens if NULL is returned that
        only happens if only HEAD has been populated yet.
@@ -208,7 +224,6 @@ extern void *salmalloc(size_t size)
       temp = memlist.skipNodes.prev_tenSpecialNode;
       ch = temp->memSegment + sizeof(smem_blk_seg);
       //printf("val: %zd.\n", *ch);
-
     } else if (temp == NULL) {
       temp = memlist.head;
     }
@@ -254,7 +269,7 @@ extern void *salmalloc(size_t size)
   }
 }
 
-extern sNode* placeToInsertNode()
+extern sNode* placeToInsertNode(size_t sizeObject)
 {
   sNode *tempTenSkipNode = memlist.head;  
   sNode *temp;
@@ -283,7 +298,8 @@ extern sNode* placeToInsertNode()
 
     
     /* If this free space */
-    if (seg->isFree == TRUE) {
+    if (seg->isFree == TRUE && seg->size >= sizeObject) {
+      memlist.flagUpdateCurrIsFree = 1;
       seg->isFree = FALSE;
       return tempTenSkipNode;
     } 
@@ -291,18 +307,21 @@ extern sNode* placeToInsertNode()
     else if (tempTenSkipNode->numNodesAhead < NINE) {
       sNode *temp = NULL;
 
-      if (tempTenSkipNode->numNodesAhead == 0) { /* printf("salman.\n"); */ return tempTenSkipNode; }
+      /* Nodes ahead are zero so just add a new node. */
+      if (tempTenSkipNode->numNodesAhead == 0 && tempTenSkipNode->next == NULL) { /* printf("salman.\n"); */ return tempTenSkipNode; }
 
       //print_mem(tempTenSkipNode);
-      temp = (sNode*) parse_eNormal_Nodes((sNode*)tempTenSkipNode->next);
+      temp = (sNode*) parse_eNormal_Nodes((sNode*)tempTenSkipNode->next, sizeObject);
 
-      if (memlist.flagUpdateCurrIsFree == 1) { return temp; }
+      if (memlist.flagUpdateCurrIsFree == 1) { tempTenSkipNode->numNodesAhead++; return temp; }
 
-      if (temp != NULL) {
-	//print_mem(temp);
-	smem_blk_seg *seg = temp->memSegment;
+      seg = temp->memSegment;
+
+      if (temp != NULL && seg->size >= sizeObject) {
+	print_mem(temp);
 	seg->isFree = FALSE;
-
+	
+	//memlist.flagUpdateCurrIsFree = 1;
 	return temp;
       } 
     }
@@ -345,15 +364,16 @@ extern void salfree (void *ptr)
     while(temp != NULL && temp->vNodeType != eTens) {      
       temp = (sNode*) temp->next;
     }
-  }
+    
+    if (temp == NULL) {temp = memlist.skipNodes.prev_tenSpecialNode;}
+    else { temp = temp->skipNodes.prev_tenSpecialNode; }
 
-  if (temp == NULL) {temp = memlist.skipNodes.prev_tenSpecialNode;}
-  else {
-    temp = temp->skipNodes.prev_tenSpecialNode;
-  }
+    //printf("address: %p and num nodes ahead: %zd.\n", temp, temp->numNodesAhead);
+    temp->numNodesAhead--;
+    print_debug(temp->numNodesAhead);
 
-  //printf("address: %p and num nodes ahead: %zd.\n", temp, temp->numNodesAhead);
-  temp->numNodesAhead--;
+  } else { /*print_debug(temp->numNodesAhead); temp->numNodesAhead > 0 ? temp->numNodesAhead--  : 0 ; print_debug(temp->numNodesAhead);*/}
+
 }
 
 
@@ -365,8 +385,8 @@ extern void print_salmalloc()
   while(temp != NULL) {
     ssize_t *ch = temp->memSegment + sizeof(smem_blk_seg);
     smem_blk_seg *seg = temp->memSegment;
-    printf("listIndex: %d. Location of sNode: %p. isFree %d. character in address %p and print: %zd.\n", listIndex, seg->locationOfsNode, seg->isFree, (temp->memSegment) + sizeof(smem_blk_seg), 
-	 *ch);
+    printf("listIndex: %d. Location of sNode: %p. isFree %d. character in address %p and print: %zd. Size is %d.\n", listIndex, seg->locationOfsNode, seg->isFree, (temp->memSegment) + sizeof(smem_blk_seg), 
+	   *ch, seg->size);
     listIndex++;
     temp = (sNode* ) temp->next;
   }
@@ -420,7 +440,7 @@ extern void print_length()
   printf("Length of list: %zd.\n", memlist.length);
 }
 
-extern void *parse_eNormal_Nodes(sNode* temp)
+extern void *parse_eNormal_Nodes(sNode* temp, size_t objectSize)
 {
   sNode *prev = (sNode*) temp;
 
@@ -428,7 +448,7 @@ extern void *parse_eNormal_Nodes(sNode* temp)
   
   while(temp != NULL && temp->vNodeType == eNormal) {
     smem_blk_seg *seg = temp->memSegment;
-    if (seg->isFree == TRUE) {
+    if (seg->isFree == TRUE && seg->size >= objectSize) {
       /* If this is 1 that means add a new node in front of previous node */
       seg->isFree = FALSE;
       memlist.flagUpdateCurrIsFree = 1;
@@ -443,7 +463,12 @@ extern void *parse_eNormal_Nodes(sNode* temp)
 
 static void print_mem(sNode* temp)
 {
+   smem_blk_seg *seg = temp->memSegment;
    ssize_t *ch = temp->memSegment + sizeof(smem_blk_seg);
-   printf("temp address: %p and value: %zd.\n", temp->memSegment + sizeof(smem_blk_seg), *ch);
+   printf("temp address: %p and value: %zd. isFree: %d.\n", temp->memSegment + sizeof(smem_blk_seg), *ch, seg->isFree);
 }
 
+static void print_debug(size_t size)
+{
+   { printf("I am salman. size is: %zd.\n", size); }
+}

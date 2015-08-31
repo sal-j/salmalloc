@@ -29,7 +29,7 @@ ssize_t testSkipNodes()
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
 	        printf("i == %zu and ch: %zd.\n", i, ch);
-		if (ch != 9 && ch != 6 && ch != 0) {
+		if (ch != 9 && ch != 6 && ch != 0 && ch != 1 && ch != 2) {
 		  printf("Test failed at skip nodes.\n");
 		  return FALSE;
 		}
@@ -42,7 +42,7 @@ ssize_t testSkipNodes()
 
 int main()
 {
-  ssize_t *a0, *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9, *a10, *a11, *a12, *a13, *a14, *a15, *a16, *a17, *a18, *a19, *a20, *a21, *a22, *a23, *a24, *a25, *a26, *a27, *a28, *a29, *a30, *a31, *a32, *a33, *a34, *a35, *a36, *a37, *a38, *a39, *a40, *a41, *a42, *a43, *a44, *a45, *a46, *a47, *a48, *a49, *a50, *a51, *a52, *a53, *a54, *a55, *a56, *a57, *a58, *a59, *a60, *a61, *a62, *a63, *a64, *a65, *a66, *a67, *a68, *a69, *a70, *a71, *a72, *a73, *a74, *a75, *a76, *a77, *a78, *a79, *a80, *a81, *a82, *a83, *a84, *a85, *a86, *a87, *a88, *a89, *a90, *a91, *a92, *a93, *a94, *a95, *a96, *a97, *a98, *a99, *a100;
+  ssize_t *a0, *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9, *a10, *a11, *a12, *a13, *a14, *a15, *a16, *a17, *a18, *a19, *a20, *a21, *a22, *a23, *a24, *a25, *a26, *a27, *a28, *a29, *a30, *a31, *a32, *a33, *a34, *a35, *a36, *a37, *a38, *a39, *a40, *a41, *a42, *a43, *a44, *a45, *a46, *a47, *a48, *a49, *a50, *a51, *a52, *a53, *a54, *a55, *a56, *a57, *a58, *a59, *a60, *a61, *a62, *a63, *a64, *a65, *a66, *a67, *a68, *a69, *a70, *a71, *a72, *a73, *a74, *a75, *a76, *a77, *a78, *a79, *a80, *a81, *a82, *a83, *a84, *a85, *a86, *a87, *a88, *a89, *a90, *a91, *a92, *a93, *a94, *a95, *a96, *a97, *a98, *a99, *a100, *a101, *a102, *a103, *a104, *a105, *a106, *a107, *a108, *a109, *a110, *a111, *a112;
 
 
 	a0 =  (ssize_t *) salmalloc(sizeof(ssize_t));
@@ -347,8 +347,6 @@ int main()
 	}
 
 	printf("Test part 2 was successful.\n");
-
-
 	
 	a97 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a97 = 97;
@@ -386,6 +384,87 @@ int main()
 	}
 
 	printf("Test part 6 was successful.\n");
+
+
+	a101 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a101 = 101;
+
+	a102 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a102 = 102;
+
+	if (testList() != TRUE) {
+		return FALSE;
+	}
+
+	printf("Test part 7 was successful.\n");
+
+	if (testSkipNodes() != TRUE) {
+		return FALSE;
+	}
+
+	printf("Test part 8 was successful.\n");
+
+
+	a103 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a103 = 103;
+
+	a104 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a104 = 104;
+
+	if (testList() != TRUE) {
+		return FALSE;
+	}
+
+	a105 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a105 = 105;
+
+	a106 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a106 = 106;
+
+	if (testList() != TRUE) {
+		return FALSE;
+	}
+
+	a107 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a107 = 107;
+
+	a108 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a108 = 108;
+
+	if (testList() != TRUE) {
+		return FALSE;
+	}
+
+	a109 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a109 = 109;
+
+	a110 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a110 = 110;
+
+	if (testList() != TRUE) {
+		return FALSE;
+	}
+
+	a111 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a111 = 111;
+
+	a112 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a112 = 112;
+
+
+	if (testList() != TRUE) {
+		return FALSE;
+	}
+
+	printf("Test part 9 was successful.\n");
+
+	if (testSkipNodes() != TRUE) {
+		return FALSE;
+	}
+
+	printf("Test part 10 was successful.\n");
+
+
 
 
 
