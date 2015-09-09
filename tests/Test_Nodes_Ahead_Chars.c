@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include "salmalloc.h"
 
+/*
+  This test checks if characters are added
+  correctly before and after skip nodes.
+*/
+
 ssize_t matchVal(char *ch)
 {
 
@@ -61,6 +66,7 @@ int main ()
   *j = 'j';
 
   if (Test_List() != TRUE) {
+    printf("Test failed at step 1. List was not populated correctly.\n");
     return FALSE;
   }
 
@@ -70,6 +76,7 @@ int main ()
   *k = 'k';
 
   if (Test_List() != TRUE) {
+    printf("Test failed at step 2. Additional element was not populated correctly.\n");
     return FALSE;
   }
 

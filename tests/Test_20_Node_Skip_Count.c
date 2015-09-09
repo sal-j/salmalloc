@@ -43,7 +43,7 @@ ssize_t testSkipNodes_Edge_Cases()
         sNode *temp = copy_list();
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
-	        printf("i == %zu and ch: %zd.\n", i, ch);
+	        //printf("i == %zu and ch: %zd.\n", i, ch);
 		if (ch != 9 && ch != 8 && ch != 0 && ch != 1) {
 		  printf("Test failed. Skip count are not what were expected.\n");
 		  return FALSE;
@@ -94,32 +94,6 @@ int main()
 	a10 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a10 = 10;
 
-       
-	/*testSkipNodes();
-
-	
-	print_salmalloc();
-
-	/*
-	printf("\n\n\n");
-
-	salfree(a8);
-	testSkipNodes();
-
-	
-	print_salmalloc();
-	*/
-	
-	/*a11 =  (ssize_t *) salmalloc(sizeof(ssize_t));
-	*a11 = 11;
-	
-	
-	printf("\n\n\n");
-
-	
-	print_salmalloc();
-	testSkipNodes();
-	*/
 	a11 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a11 = 11;
 	
@@ -172,17 +146,6 @@ int main()
 	}
 
 	printf("Test part 3 was successful.\n");
-
-	//print_salmalloc();
-
-	/*salfree(a10);
-
-	print_salmalloc();
-
-	a20 =  (ssize_t *) salmalloc(sizeof(ssize_t));
-	*a20 = 20;
-	*/
-	//print_salmalloc();
 
 	return TRUE;
 }

@@ -11,7 +11,7 @@ sList memlist = {0};
 		   +
 	     sizeOf Object
 	**************************
-		mem_seg has 
+		mem_seg has
 		metadata
 	**************************
 	      return to use
@@ -24,8 +24,9 @@ sList memlist = {0};
 	**************************
 */
 
-static void print_mem(sNode*);
 static void print_debug();
+
+static void countNodesAhead(sNode*, sNode*, nodeType);
 
 extern void link_skip_nodes(sNode *temp)
 {
@@ -51,21 +52,35 @@ extern void link_skip_nodes(sNode *temp)
 	temp->skipNodes.fwd_hundredSpecialNode  = NULL;
 
 	memlist.skipNodes.prev_tenSpecialNode = temp;
-	
+	memlist.skipNodes.prev_hundredSpecialNode = temp;
+
 	temp->numNodesAhead = ZERO;
+
+	countNodesAhead(memlist.head, temp, eHundreds);
 
       } else {
 
 	sNode *prev = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
 	sNode *prevHundred = (sNode*) memlist.skipNodes.prev_hundredSpecialNode;
-	
+
+	/* connect current and previous ten special nodes. */
 	prev->skipNodes.fwd_tenSpecialNode  = temp;
 	temp->skipNodes.prev_tenSpecialNode = prev;
-	
+
+	/* connect current and previous 100 special nodes. */
+	prevHundred->skipNodes.fwd_hundredSpecialNode = temp;
+	temp->skipNodes.fwd_hundredSpecialNode = NULL;
+
+	memlist.skipNodes.prev_tenSpecialNode = temp;
+
 	temp->vNodeType = eHundreds;
 
+	temp->numNodesAhead = ZERO;
+
+	countNodesAhead(prevHundred, temp, eHundreds);
       }
     } else if (memlist.length % TEN == ZERO) {
+
       temp->vNodeType = eTens;
       
       if (memlist.length == TEN) {
@@ -182,21 +197,6 @@ extern void *salmalloc(size_t size)
     sNode *temp = memlist.head, *prev = NULL, *specialNode = NULL;
     size_t flag = 0;
     ssize_t *ch = 0;
-    /*if (whereToInsertNode(temp) == TRUE) {
-      size_t count = 0;
-      smem_blk_seg *seg1 = temp->memSegment;
-
-      while(seg1->isFree == FALSE) {
-	temp = (sNode*) temp->next;
-	seg1 = temp->memSegment;
-      }
-      
-      if (seg1->size >= size) {	
-	printf("seg size: %d and size: %d.\n", seg1->size, size);
-	seg1->isFree = FALSE;
-	return temp->memSegment + sizeof(smem_blk_seg);
-      }
-    }*/
 
     /* There are two possibilities here as to where to insert this node
        1. Either the node is free. so just return.
@@ -206,14 +206,18 @@ extern void *salmalloc(size_t size)
     temp = placeToInsertNode(size);
 
     /* If there is free space. */
-    if (memlist.length != ZERO && memlist.flagUpdateCurrIsFree == TRUE) {
+    if (memlist.flagUpdateCurrIsFree == TRUE) {
+      //print_mem(temp);
+
+      memlist.flagUpdateCurrIsFree = FALSE;
       seg = temp->memSegment;
       seg->isFree = FALSE;
-      //print_mem(temp);
-      return temp->memSegment + sizeof(smem_blk_seg); 
-    }
+      
+      if (temp != memlist.head && temp->vNodeType != eTens) {temp->numNodesAhead++;}
 
-    printf("salman.\n");
+      return temp->memSegment + sizeof(smem_blk_seg); 
+    }    
+
     /* First check is useless. Will update later.
        Second check happens if NULL is returned that
        only happens if only HEAD has been populated yet.
@@ -227,13 +231,6 @@ extern void *salmalloc(size_t size)
     } else if (temp == NULL) {
       temp = memlist.head;
     }
-
-    /* Go to the last node 
-    while(temp->next != NULL) {
-      prev = temp;
-      temp = (sNode *) temp->next;
-    }    
-    */
 
     //print_mem(temp);
 
@@ -253,16 +250,6 @@ extern void *salmalloc(size_t size)
       sNode *aheadNodes = (sNode *) memlist.skipNodes.prev_tenSpecialNode;
       aheadNodes->numNodesAhead++;
     }
-
-
-    /*if (get_length() <= TEN) {
-      memlist.head->numNodesAhead == EMPTY ? memlist.head->numNodesAhead = ONE : memlist.head->numNodesAhead++;
-      printf("numNodes head: %zd.\n", memlist.head->numNodesAhead);
-    } else if (){
-      specialNode = (sNode*) memlist.skipNodes.prev_tenSpecialNode;
-      printf("numNodes newNode: %zd.\n", specialNode->numNodesAhead);
-      specialNode->numNodesAhead == EMPTY ? specialNode->numNodesAhead = ONE : specialNode->numNodesAhead++;
-      }*/
     
     /* return memory segment */
     return temp->memSegment + sizeof(smem_blk_seg);
@@ -273,9 +260,14 @@ extern sNode* placeToInsertNode(size_t sizeObject)
 {
   sNode *tempTenSkipNode = memlist.head;  
   sNode *temp;
+  smem_blk_seg *seg = tempTenSkipNode->memSegment;
 
   /* If there are no nodes yet ahead, so return NULL and add new node. */
-  if (tempTenSkipNode->numNodesAhead == ZERO) { return NULL; }
+  if (seg->isFree == TRUE && seg->size >= sizeObject) {
+      memlist.flagUpdateCurrIsFree = 1;
+      seg->isFree = FALSE;
+      return tempTenSkipNode;
+  } 
 
   /* 
      Now for each ten Skip node, check
@@ -296,6 +288,8 @@ extern sNode* placeToInsertNode(size_t sizeObject)
 
     smem_blk_seg *seg = tempTenSkipNode->memSegment;
 
+    //print_debug(tempTenSkipNode->numNodesAhead);
+
     
     /* If this free space */
     if (seg->isFree == TRUE && seg->size >= sizeObject) {
@@ -303,6 +297,8 @@ extern sNode* placeToInsertNode(size_t sizeObject)
       seg->isFree = FALSE;
       return tempTenSkipNode;
     } 
+
+
     /* If there is space for a node in front. */
     else if (tempTenSkipNode->numNodesAhead < NINE) {
       sNode *temp = NULL;
@@ -311,6 +307,7 @@ extern sNode* placeToInsertNode(size_t sizeObject)
       if (tempTenSkipNode->numNodesAhead == 0 && tempTenSkipNode->next == NULL) { /* printf("salman.\n"); */ return tempTenSkipNode; }
 
       //print_mem(tempTenSkipNode);
+      
       temp = (sNode*) parse_eNormal_Nodes((sNode*)tempTenSkipNode->next, sizeObject);
 
       if (memlist.flagUpdateCurrIsFree == 1) { tempTenSkipNode->numNodesAhead++; return temp; }
@@ -318,13 +315,15 @@ extern sNode* placeToInsertNode(size_t sizeObject)
       seg = temp->memSegment;
 
       if (temp != NULL && seg->size >= sizeObject) {
-	print_mem(temp);
+	//print_mem(temp);
 	seg->isFree = FALSE;
 	
 	//memlist.flagUpdateCurrIsFree = 1;
 	return temp;
       } 
     }
+
+
     
     /* If next fwd_TenSpecialNode is null, then we just return 
        the second last node to that null node and list is appended
@@ -346,6 +345,11 @@ extern sNode* placeToInsertNode(size_t sizeObject)
   return NULL;
 }
 
+
+/*
+  function to free the allocated memory. @ptr is the pointer
+  to allocated memory.
+*/
 extern void salfree (void *ptr) 
 {
   smem_blk_seg *seg = (ptr - sizeof(smem_blk_seg));
@@ -353,27 +357,37 @@ extern void salfree (void *ptr)
 
   seg->isFree = TRUE;
 
-  /* This is our node. Now either it is a normal node in which case
+  /* 
+     seg is our node. Now either it is a normal node in which case
      we move forward to next skip node and then find our way back
      and update our node numNodes ahead. Or if it is a skip node,
-     just move to prev_tenSpecialNode and decrement numNodesAhead.
+     just update isFree in seg and that is it.
   */
   temp = seg->locationOfsNode;
 
+  /* Ensure that it is a eNormal node. */
   if (temp->vNodeType == eNormal) {
+    
+    /* 
+       Now move back to next eTens node. Either you find the next
+       eTens node ahead or the list has not been populated yet for a next
+       eTens node. In former case, you just decrement its numNodesAhead.
+       In latter, skip list has the location of last prev special eTens node,
+       so go back and update it.
+    */
+
+    //print_mem(temp);
     while(temp != NULL && temp->vNodeType != eTens) {      
       temp = (sNode*) temp->next;
     }
-    
+
     if (temp == NULL) {temp = memlist.skipNodes.prev_tenSpecialNode;}
     else { temp = temp->skipNodes.prev_tenSpecialNode; }
 
     //printf("address: %p and num nodes ahead: %zd.\n", temp, temp->numNodesAhead);
-    temp->numNodesAhead--;
-    print_debug(temp->numNodesAhead);
-
-  } else { /*print_debug(temp->numNodesAhead); temp->numNodesAhead > 0 ? temp->numNodesAhead--  : 0 ; print_debug(temp->numNodesAhead);*/}
-
+    temp->numNodesAhead == 0 ? 0 : temp->numNodesAhead--;
+    //print_debug(temp->numNodesAhead);
+  } 
 }
 
 
@@ -440,18 +454,29 @@ extern void print_length()
   printf("Length of list: %zd.\n", memlist.length);
 }
 
+/*
+  function to find the next free node ahead of this
+  special ten node. @temp is the current node. @objectSize
+  is the size of object to be allocated memory.
+*/
 extern void *parse_eNormal_Nodes(sNode* temp, size_t objectSize)
 {
   sNode *prev = (sNode*) temp;
 
   //printf("temp type: %d.\n", temp->vNodeType);  
   
+  /* Traverse the nodes till the next eTens special node */
   while(temp != NULL && temp->vNodeType == eNormal) {
     smem_blk_seg *seg = temp->memSegment;
+
+    /* if this node is free and it can accomodate this object, return this node */
     if (seg->isFree == TRUE && seg->size >= objectSize) {
       /* If this is 1 that means add a new node in front of previous node */
       seg->isFree = FALSE;
-      memlist.flagUpdateCurrIsFree = 1;
+
+      /* flag will be TRUE if this node can be returned to user */
+      memlist.flagUpdateCurrIsFree = TRUE;
+
       return temp;
     } 
     prev = temp;
@@ -461,7 +486,7 @@ extern void *parse_eNormal_Nodes(sNode* temp, size_t objectSize)
   return prev;
 }
 
-static void print_mem(sNode* temp)
+extern void print_mem(sNode* temp)
 {
    smem_blk_seg *seg = temp->memSegment;
    ssize_t *ch = temp->memSegment + sizeof(smem_blk_seg);
@@ -470,5 +495,35 @@ static void print_mem(sNode* temp)
 
 static void print_debug(size_t size)
 {
-   { printf("I am salman. size is: %zd.\n", size); }
+  { printf("I am salman. size is: %zd.\n", size); }
 }
+
+/*
+  Function to find num nodes ahead of current 
+  eHundred node. @curr is the previous node. @dest
+  is the node to where to crawl upto. We jump in
+  shapes of 10 nodes using tenSpecial node.
+*/
+static void countNodesAhead(sNode* curr, sNode* dest, nodeType type)
+{
+  size_t count = 0;
+  sNode *temp = (sNode*) curr; /* copy current node location into temp.  */
+
+  /* move from current to last node. */
+  while(curr != dest) {
+    smem_blk_seg *seg = curr->memSegment;
+
+    /* increment count. if curr is a tenSpecialNode, check
+       if it is free or not. This is important because we
+       don't count the special node along with its numNodesAhead.
+    */
+    count = count + curr->numNodesAhead + (seg->isFree == FALSE ? 1 : 0);
+
+    /* If type is hundred, move ten special node. */
+    if (type == eHundreds) {curr = (sNode*) curr->skipNodes.fwd_tenSpecialNode;}
+  }
+
+  //print_debug(count);
+  temp->numNodesAhead = count;
+}
+

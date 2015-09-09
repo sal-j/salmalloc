@@ -1,5 +1,5 @@
 def generate100NodeTest():
-    with open('Test_100_Node.c', 'w') as writeFile:
+    with open('Test_300_Node.c', 'w') as writeFile:
         # Include files
         writeFile.write('#include <stdio.h>' + '\n')
         writeFile.write('#include "salmalloc.h"' + '\n\n\n')
@@ -33,7 +33,7 @@ ssize_t testSkipNodes()\n\
         while (temp != NULL) {\n\
         	int ch = temp->numNodesAhead;\n\
 	        printf("i == %zu and ch: %zd.\\n", i, ch);\n\
-		temp = temp->skipNodes.fwd_tenSpecialNode;\n\
+		temp = temp->skipNodes.fwd_hundredSpecialNode;\n\
         	i++;\n\
         }\n\
         return TRUE;\n\
@@ -44,18 +44,18 @@ ssize_t testSkipNodes()\n\
         # main defined
         writeFile.write('int main()' + '\n' + '{' + '\n')
 
-        maxCount = 100
+        maxCount = 203
         # declare variables
         for i in range(0, maxCount):
             if i is 0:
                 writeFile.write('\tssize_t *a' + str(i) + ',')
-            elif i is not maxCount - 1:
+            elif i != maxCount - 1:
                 writeFile.write(' *a' + str(i) + ',')
-            else:
+            elif i == maxCount - 1:
                 writeFile.write(' *a' + str(i) + ';')
                 writeFile.write('\n\n\n')
 
-        
+
         # give memory to variables
         for i in range(0, maxCount):
             writeFile.write('\ta' + str(i) + ' = ' + ' (ssize_t *) salmalloc(sizeof(ssize_t));' + '\n')
