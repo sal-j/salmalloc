@@ -93,14 +93,14 @@ ssize_t testSkipNodes_Edge_Cases()
         sNode *temp = copy_list();
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
-	        printf("i == %zu and ch: %zd.\n", i, ch);
-		/*switch (i) {
-		  case 0: {if (ch != 9) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
+	        //printf("i == %zu and ch: %zd.\n", i, ch);
+		switch (i) {
+		case 0: {if (ch != 9) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
 		case 1: {if (ch != 9) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
 		case 2: {if (ch != 1) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
 		default: {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;}
 	     
-		}*/
+		}
 		temp = temp->skipNodes.fwd_tenSpecialNode;
         	i++;
         }
@@ -181,18 +181,13 @@ int main()
 	a21 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a21 = 21;
 
-	/*if (testSkipNodes_Edge_Cases() != TRUE) {
+	if (testSkipNodes_Edge_Cases() != TRUE) {
 	  return FALSE;
-	  }*/
+	}
 	  
-	//print_skip_nodes(eTens);
-	
-	//return FALSE;
-	
-	//printf("Part 1 of test case passed. Edge cases evaluated correctly.\n");
+	printf("Part 1 of test case passed. Edge cases evaluated correctly.\n");
 
 	testSkipNodes_Edge_Cases();
-
 
 	/* Free random positions in list */
        	salfree(a0);
@@ -205,17 +200,12 @@ int main()
 	salfree(a20);
 	salfree(a21);
 
-	
-
-	//return FALSE;
-
-
 	/* Check if positions were correctly freed. */
-	/*if (testIsFree() != TRUE) {
+	if (testIsFree() != TRUE) {
 	  return FALSE;
-	  }*/
+        }
 	
-	//	printf("Part 2 of test case passed. Free was evaluated correctly.\n");
+      	printf("Part 2 of test case passed. Free was evaluated correctly.\n");
 	
 	/* repopulate these positions.*/
 	a0 =  (ssize_t *) salmalloc(sizeof(ssize_t));
@@ -230,31 +220,21 @@ int main()
 	*a10 = 10;
 	a11 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a11 = 11;
-
 	a12 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a12 = 12;
-
-
 	a20 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a20 = 20;
 	a21 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a21 = 21;
 
-	/*if (testAllFree() != TRUE) {
+	if (testAllFree() != TRUE) {
 	  printf("Test failed at step 2b. All that were freed where not populated.\n");
 	  return FALSE;
-	  }*/
-
-
+	}
 
 	/* add a larger sized element and ensure that it is populated at the end of list */
 	b = (uint64_t*) salmalloc(sizeof(uint64_t));
 	*b = 22;
-
-	//return FALSE;
-
-
-
 	
 	/*  Test if element was added correctly. */
 	if (testAdditionOfLargerElementAtEndOfList() != TRUE) {
@@ -268,15 +248,8 @@ int main()
 	a23 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a23 = 23;
 
-	testSkipNodes_Edge_Cases();
-
-
-
-
-
 	/* Free this node */
 	salfree(a23);
-
 
 	/* Check if positions were correctly freed. */
 	if (testIsFree24Item() != TRUE) {
@@ -288,16 +261,6 @@ int main()
 	
 	a23 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a23 = 23;
-
-	testSkipNodes_Edge_Cases();
-
-
-	print_salmalloc();
-
-
-	return TRUE;
-
-
 
 	if (testAllFree() != TRUE) {
 	  printf("Test failed at step 5. All that were freed where not populated.\n");
