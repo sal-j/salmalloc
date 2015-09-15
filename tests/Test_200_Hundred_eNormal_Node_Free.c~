@@ -7,59 +7,60 @@
   skip nodes are updated correctly.
 */
 
+ssize_t *a0, *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9, *a10, *a11, *a12, *a13, *a14, *a15, *a16, *a17, *a18, *a19, *a20, *a21, *a22, *a23, *a24, *a25, *a26, *a27, *a28, *a29, *a30, *a31, *a32, *a33, *a34, *a35, *a36, *a37, *a38, *a39, *a40, *a41, *a42, *a43, *a44, *a45, *a46, *a47, *a48, *a49, *a50, *a51, *a52, *a53, *a54, *a55, *a56, *a57, *a58, *a59, *a60, *a61, *a62, *a63, *a64, *a65, *a66, *a67, *a68, *a69, *a70, *a71, *a72, *a73, *a74, *a75, *a76, *a77, *a78, *a79, *a80, *a81, *a82, *a83, *a84, *a85, *a86, *a87, *a88, *a89, *a90, *a91, *a92, *a93, *a94, *a95, *a96, *a97, *a98, *a99, *a100, *a101, *a102, *a103, *a104, *a105, *a106, *a107, *a108, *a109, *a110, *a111, *a112, *a113, *a114, *a115, *a116, *a117, *a118, *a119, *a120, *a121, *a122, *a123, *a124, *a125, *a126, *a127, *a128, *a129, *a130, *a131, *a132, *a133, *a134, *a135, *a136, *a137, *a138, *a139, *a140, *a141, *a142, *a143, *a144, *a145, *a146, *a147, *a148, *a149, *a150, *a151, *a152, *a153, *a154, *a155, *a156, *a157, *a158, *a159, *a160, *a161, *a162, *a163, *a164, *a165, *a166, *a167, *a168, *a169, *a170, *a171, *a172, *a173, *a174, *a175, *a176, *a177, *a178, *a179, *a180, *a181, *a182, *a183, *a184, *a185, *a186, *a187, *a188, *a189, *a190, *a191, *a192, *a193, *a194, *a195, *a196, *a197, *a198, *a199, *a200, *a203, *a204, *a205, *a206, *a207, *a208, *a209, *a210, *a211, *a212, *a213, *a214, *a215;
 
-void print_free_mem()
+
+ssize_t testIfHundredsNodeFreedCorrectly()
 {
-        sNode *temp = copy_list();
-	smem_blk_seg *seg = temp->memSegment;
-	ssize_t i = 0;
-        while (temp != NULL) {
-	  	//int ch = temp->numNodesAhead;
-	  	seg = temp->memSegment;
-		if (seg->isFree == TRUE) { printf("i == %zu and isFree: %zd.\n", i, seg->isFree); }
-		i++;
-		temp = (sNode*) temp->next;
-	}
+  sNode* temp = (sNode*) copy_list();
+  smem_blk_seg *seg = NULL;
+  ssize_t *compare;
 
-}
+  temp = temp->skipNodes.fwd_hundredSpecialNode;
 
-ssize_t testList() 
-{
- 		sNode *temp = copy_list();
-		ssize_t count = 0;
-       		while(temp != NULL) {
-       			ssize_t *compare = temp->memSegment + sizeof(smem_blk_seg);
-			if (*compare != count) {
-				printf("Test failed at count %zd when compare was %zd.\n", count, *compare);
-       				return FALSE;
-       			}
-       			temp = (sNode*)temp->next;
-        		count++;
-       		}
-       		return TRUE;
-}
+  if (temp->numNodesAhead != 100 && temp->tenNodesAhead != 10) {
+    printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead);
+    printf("Test failed at step 1 of first hundred node.");
+    return FALSE;
+  }
+
+  salfree(a100);
+
+  printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead);
+
+  if (temp->numNodesAhead != 99 && temp->tenNodesAhead != 9) {
+    printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead);
+    printf("Test failed at step 2 of first hundred node.");
+    return FALSE;
+  }
+
+  salfree(a110);
+
+  printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
+
+  if (temp->numNodesAhead != 98) {
+    printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
+    printf("Test failed at step 3 of first hundred node.");
+    return FALSE;
+  }
 
 
+  salfree(a113);
 
+  printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
 
-ssize_t testSkipNodes()
-{
-        size_t i = 0;
-        sNode *temp = copy_list();
-        while (temp != NULL) {
-	  	int ch = temp->numNodesAhead;
-	        printf("i == %zu and ch: %zd.\n", i, ch);
-		//if (ch != 100 && ch != 3) {printf("Test case failed. Skip nodes are not correct.\n"); return FALSE;}
-		temp = temp->skipNodes.fwd_hundredSpecialNode;
-        	i++;
-        }
-        return TRUE;
+  if (temp->numNodesAhead != 97) {
+    printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
+    printf("Test failed at step 3 of first hundred node.");
+    return FALSE;
+  }
+  
+  return TRUE;
 }
 
 
 int main()
 {
-  ssize_t *a0, *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9, *a10, *a11, *a12, *a13, *a14, *a15, *a16, *a17, *a18, *a19, *a20, *a21, *a22, *a23, *a24, *a25, *a26, *a27, *a28, *a29, *a30, *a31, *a32, *a33, *a34, *a35, *a36, *a37, *a38, *a39, *a40, *a41, *a42, *a43, *a44, *a45, *a46, *a47, *a48, *a49, *a50, *a51, *a52, *a53, *a54, *a55, *a56, *a57, *a58, *a59, *a60, *a61, *a62, *a63, *a64, *a65, *a66, *a67, *a68, *a69, *a70, *a71, *a72, *a73, *a74, *a75, *a76, *a77, *a78, *a79, *a80, *a81, *a82, *a83, *a84, *a85, *a86, *a87, *a88, *a89, *a90, *a91, *a92, *a93, *a94, *a95, *a96, *a97, *a98, *a99, *a100, *a101, *a102, *a103, *a104, *a105, *a106, *a107, *a108, *a109, *a110, *a111, *a112, *a113, *a114, *a115, *a116, *a117, *a118, *a119, *a120, *a121, *a122, *a123, *a124, *a125, *a126, *a127, *a128, *a129, *a130, *a131, *a132, *a133, *a134, *a135, *a136, *a137, *a138, *a139, *a140, *a141, *a142, *a143, *a144, *a145, *a146, *a147, *a148, *a149, *a150, *a151, *a152, *a153, *a154, *a155, *a156, *a157, *a158, *a159, *a160, *a161, *a162, *a163, *a164, *a165, *a166, *a167, *a168, *a169, *a170, *a171, *a172, *a173, *a174, *a175, *a176, *a177, *a178, *a179, *a180, *a181, *a182, *a183, *a184, *a185, *a186, *a187, *a188, *a189, *a190, *a191, *a192, *a193, *a194, *a195, *a196, *a197, *a198, *a199, *a200;
 
  	uint64_t *a201, *a202;
 
@@ -675,45 +676,49 @@ int main()
 	a202 =  (uint64_t *) salmalloc(sizeof(uint64_t));
 	*a202 = 202;
 
-	temp = (sNode *) copy_list();
+	a203 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a203 = 103;
 
-	printf("head has this many nodes ahead: %d.\n", temp->numNodesAhead);
+	a204 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a204 = 104;
 
-	if (testList() != TRUE) {
+	a205 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a205 = 105;
+
+	a206 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a206 = 106;
+
+	a207 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a207 = 107;
+
+	a208 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a208 = 108;
+
+	a209 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a209 = 109;
+
+	a210 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a210 = 110;
+
+	a211 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a211 = 111;
+
+	a212 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a212 = 112;
+
+	a213 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a213 = 113;
+
+	a214 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a214 = 114;
+
+	a215 =  (ssize_t *) salmalloc(sizeof(ssize_t));
+	*a215 = 115;
+
+	/* Check if nodes were freed correctly. */
+	if (testIfHundredsNodeFreedCorrectly() == FALSE) {
 	  return FALSE;
 	}
-
-	printf("Test part 1 was successful.\n");
-
-	if (testSkipNodes() != TRUE) {
-	  return FALSE;
-	}
-
-	printf("Test part 2 was successful.\n");
-
-
-	/* now free some memory */
-	salfree(a0);
-	salfree(a1);
-	salfree(a68);
-	salfree(a69);
-	salfree(a70);
-
-	print_free_mem();
-
-	testSkipNodes();
-
-	return TRUE;
-
-	salfree(a71);
-	salfree(a99);
-	salfree(a100);
-	salfree(a101);
-	salfree(a198);
-	salfree(a199);
-	salfree(a200);
-	salfree(a201);
-	salfree(a202);
 
 
 	return TRUE;

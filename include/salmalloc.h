@@ -70,6 +70,7 @@ typedef struct Node {
   nodeSize vNodeSize;
   ssize_t numNodesAhead;
   skip_list_nodes skipNodes;
+  ssize_t tenNodesAhead;
 
 #define tenSkipNodeFree 1
 #define hundredSkipNodeFree 2

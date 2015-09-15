@@ -1,0 +1,9 @@
+
+
+check if list is eHundreds
+      find the previous tenNode, update numNodes ahead
+      find the previous hundredNode, update numNodes ahead
+
+check if list is eTens
+      find the previous tenNode, update numNodes ahead
+      
