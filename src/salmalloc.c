@@ -126,6 +126,7 @@ extern void *insert_salmalloc(size_t size)
   void *sNodeLocation = NULL;
   sNode* temp = NULL;
 
+  /* Get node location. Save it for future reference. */
   sNodeLocation = (void*) sbrk(0);
 
   /* extend heap by sNode */
