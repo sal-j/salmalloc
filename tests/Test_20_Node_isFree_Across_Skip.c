@@ -15,7 +15,7 @@
 ssize_t testIsFree24Item()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
         while (temp != NULL) {
 	  smem_blk_seg *seg = temp->memSegment;
 	  
@@ -33,7 +33,7 @@ ssize_t testIsFree24Item()
 ssize_t testIsFree()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
         while (temp != NULL) {
 	  smem_blk_seg *seg = temp->memSegment;
 	  //printf("i == %zu and ch: %zd.\n", i, seg->isFree);
@@ -61,7 +61,7 @@ ssize_t testIsFree()
 ssize_t testAllFree()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
         while (temp != NULL) {
 	  smem_blk_seg *seg = temp->memSegment;
 	  //printf("i == %zu and ch: %zd.\n", i, seg->isFree);
@@ -77,7 +77,7 @@ ssize_t testAllFree()
 ssize_t testAdditionOfLargerElementAtEndOfList()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
 	ssize_t result = FALSE;
         while (temp != NULL) {
 	  smem_blk_seg *seg = temp->memSegment;
@@ -90,7 +90,7 @@ ssize_t testAdditionOfLargerElementAtEndOfList()
 ssize_t testSkipNodes_Edge_Cases()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
 	        //printf("i == %zu and ch: %zd.\n", i, ch);

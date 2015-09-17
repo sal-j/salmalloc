@@ -10,7 +10,7 @@
 
 void print_free_mem()
 {
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
 	smem_blk_seg *seg = temp->memSegment;
 	ssize_t i = 0;
         while (temp != NULL) {
@@ -25,7 +25,7 @@ void print_free_mem()
 
 ssize_t testList() 
 {
- 		sNode *temp = copy_list();
+ 		sNode *temp = copy_list(4);
 		ssize_t count = 0;
        		while(temp != NULL) {
        			ssize_t *compare = temp->memSegment + sizeof(smem_blk_seg);
@@ -45,7 +45,7 @@ ssize_t testList()
 ssize_t testSkipNodes()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
         while (temp != NULL) {
 	  	int ch = temp->numNodesAhead;
 	        printf("i == %zu and ch: %zd.\n", i, ch);
@@ -675,7 +675,7 @@ int main()
 	a202 =  (uint64_t *) salmalloc(sizeof(uint64_t));
 	*a202 = 202;
 
-	temp = (sNode *) copy_list();
+	temp = (sNode *) copy_list(4);
 
 	printf("head has this many nodes ahead: %d.\n", temp->numNodesAhead);
 

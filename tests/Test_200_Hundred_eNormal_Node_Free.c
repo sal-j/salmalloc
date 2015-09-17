@@ -17,7 +17,7 @@ ssize_t *a0, *a1, *a2, *a3, *a4, *a5, *a6, *a7, *a8, *a9, *a10, *a11, *a12, *a13
 
 ssize_t testIfHundredsNodeFreedCorrectly()
 {
-  sNode* temp = (sNode*) copy_list();
+  sNode* temp = (sNode*) copy_list(4);
   smem_blk_seg *seg = NULL;
   ssize_t *compare;
 

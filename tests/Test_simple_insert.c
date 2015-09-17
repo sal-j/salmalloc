@@ -19,7 +19,7 @@ int main ()
 
   print_salmalloc();
 
-  temp = copy_list();
+  temp = copy_list(4);
 
   
 

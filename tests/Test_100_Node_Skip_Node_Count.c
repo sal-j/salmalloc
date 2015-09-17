@@ -9,7 +9,7 @@
 
 ssize_t testList() 
 {
- 		sNode *temp = copy_list();
+ 		sNode *temp = copy_list(4);
 		ssize_t count = 0;
        		while(temp != NULL) {
        			ssize_t *compare = temp->memSegment + sizeof(smem_blk_seg);
@@ -29,7 +29,7 @@ ssize_t testList()
 ssize_t testSkipNodes()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
 	        printf("i == %zu and ch: %zd.\n", i, ch);

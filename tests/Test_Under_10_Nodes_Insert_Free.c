@@ -11,7 +11,7 @@
 ssize_t testNodes_Under_10_Insert_Free()
 {
         size_t i = 0;
-        sNode *temp = copy_list();
+        sNode *temp = copy_list(4);
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
 	        printf("i == %zu and ch: %zd.\n", i, ch);

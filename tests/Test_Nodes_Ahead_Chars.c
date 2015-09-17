@@ -22,7 +22,7 @@ ssize_t matchVal(char *ch)
 
 ssize_t Test_List()
 {
-  sNode *temp = copy_list();
+  sNode *temp = copy_list(4);
 
   while(temp != NULL) {
 

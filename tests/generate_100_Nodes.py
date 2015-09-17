@@ -8,7 +8,7 @@ def generate100NodeTest():
         testList = '\n\
 ssize_t testList() \n\
 {\n\
- 		sNode *temp = copy_list();\n\
+ 		sNode *temp = copy_list(4);\n\
 		ssize_t count = 0;\n\
        		while(temp != NULL) {\n\
        			ssize_t *compare = temp->memSegment + sizeof(smem_blk_seg);\n\
@@ -29,7 +29,7 @@ ssize_t testList() \n\
 ssize_t testSkipNodes()\n\
 {\n\
         size_t i = 0;\n\
-        sNode *temp = copy_list();\n\
+        sNode *temp = copy_list(4);\n\
         while (temp != NULL) {\n\
         	int ch = temp->numNodesAhead;\n\
 	        printf("i == %zu and ch: %zd.\\n", i, ch);\n\

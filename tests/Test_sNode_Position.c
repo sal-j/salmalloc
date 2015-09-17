@@ -18,7 +18,7 @@ int main ()
   a = (char *) salmalloc(sizeof(char));
   *a = 'a';
 
-  temp = (sNode*) copy_list();
+  temp = (sNode*) copy_list(4);
 
   seg = temp->memSegment;
 
