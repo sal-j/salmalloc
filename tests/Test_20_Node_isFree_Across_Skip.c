@@ -95,9 +95,9 @@ ssize_t testSkipNodes_Edge_Cases()
         	int ch = temp->numNodesAhead;
 	        //printf("i == %zu and ch: %zd.\n", i, ch);
 		switch (i) {
-		case 0: {if (ch != 9) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
-		case 1: {if (ch != 9) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
-		case 2: {if (ch != 1) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
+		case 0: {if (ch != 10) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
+		case 1: {if (ch != 10) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
+		case 2: {if (ch != 2) {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;} break;}
 		default: {printf("Test case failed in Edge cases evalulation.\n"); return FALSE;}
 	     
 		}
@@ -185,7 +185,7 @@ int main()
 	  return FALSE;
 	}
 	  
-	printf("Part 1 of test case passed. Edge cases evaluated correctly.\n");
+	/* printf("Part 1 of test case passed. Edge cases evaluated correctly.\n"); */
 
 	testSkipNodes_Edge_Cases();
 
@@ -205,7 +205,7 @@ int main()
 	  return FALSE;
         }
 	
-      	printf("Part 2 of test case passed. Free was evaluated correctly.\n");
+      	/* printf("Part 2 of test case passed. Free was evaluated correctly.\n"); */
 	
 	/* repopulate these positions.*/
 	a0 =  (ssize_t *) salmalloc(sizeof(ssize_t));
@@ -241,8 +241,7 @@ int main()
 	  printf("Test failed at insertion of b which is size 8.\n");
 	}
 
-	printf("Part 3 of test case passed. Larger sized element was added correctly at the end.\n");
-
+	/* printf("Part 3 of test case passed. Larger sized element was added correctly at the end.\n"); */
 
 	/* Add a new node */
 	a23 =  (ssize_t *) salmalloc(sizeof(ssize_t));
@@ -257,7 +256,7 @@ int main()
 	  return FALSE;
 	}
 
-	printf("Part 4 of test case passed. Free was evaluated correctly.\n");
+	/* printf("Part 4 of test case passed. Free was evaluated correctly.\n"); */
 	
 	a23 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a23 = 23;
@@ -267,8 +266,9 @@ int main()
 	  return FALSE;
 	}
 
-	printf("Part 5 of test case passed. Free was evaluated correctly.\n");
+	/* printf("Part 5 of test case passed. Free was evaluated correctly.\n"); */
 
+	printf("Test_20_Node_isFree_Across_Skip.c passed.\n");
 	
 	return TRUE;
 }

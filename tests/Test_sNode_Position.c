@@ -35,7 +35,7 @@ int main ()
     return FALSE;
   }
 
-  printf("Test passed.\n");
+  printf("Test_sNode_Position.c passed.\n");
   
   return 0;
 }

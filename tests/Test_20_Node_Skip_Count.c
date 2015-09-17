@@ -27,7 +27,7 @@ ssize_t testSkipNodes()
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
 	        //printf("i == %zu and ch: %zd.\n", i, ch);
-		if (ch != 9) {
+		if (ch != 10) {
 		  printf("Test failed. Skip count are not what were expected.\n");
 		  return FALSE;
 		}
@@ -44,7 +44,7 @@ ssize_t testSkipNodes_Edge_Cases()
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
 	        //printf("i == %zu and ch: %zd.\n", i, ch);
-		if (ch != 9 && ch != 8 && ch != 0 && ch != 1) {
+		if (ch != 10 && ch != 9 && ch != 0 && ch != 2) {
 		  printf("Test failed. Skip count are not what were expected.\n");
 		  return FALSE;
 		}
@@ -126,13 +126,13 @@ int main()
 		return FALSE;
 	}
 
-	printf("Test part 1 was successful.\n");
+	/* printf("Test part 1 was successful.\n"); */
 
 	if (testSkipNodes() != TRUE) {
 	  return FALSE;
 	}
 
-	printf("Test part 2 was successful.\n");
+	/* printf("Test part 2 was successful.\n"); */
 
 	a20 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a20 = 20;
@@ -145,7 +145,9 @@ int main()
 	  return FALSE;
 	}
 
-	printf("Test part 3 was successful.\n");
+	/* printf("Test part 3 was successful.\n"); */
+
+	printf("Test_20_Node_Skip_Count.c passed.\n");
 
 	return TRUE;
 }

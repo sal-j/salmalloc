@@ -615,7 +615,7 @@ static sNode *test_insert(size_t sizeObject)
 	seg = temp->memSegment; 
 	seg->isFree = FALSE; 
 	prev->numNodesAhead++; 
-	print_debug(prev->numNodesAhead);
+	//print_debug(prev->numNodesAhead);
 		  
 	return temp; 
       }

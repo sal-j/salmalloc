@@ -17,17 +17,11 @@ int main ()
   d = (char *) salmalloc(sizeof(char));
   *d = 'd';
 
-  print_salmalloc();
-
-  temp = copy_list(4);
-
-  
+  temp = copy_list(4);  
 
   while(temp != NULL) {
 
     char *ch = temp->memSegment + sizeof(smem_blk_seg);
-
-    printf("ch adress: %p and val %c.\n", temp->memSegment + sizeof(smem_blk_seg), *ch);
 
     if (*ch == 'a' || *ch == 'b' || *ch == 'c' || *ch == 'd') {
     } else {
@@ -38,8 +32,8 @@ int main ()
     temp = (sNode*)temp->next;
   }
 
-  printf("Test passed.\n");
+  printf("Test_simple_insert.c passed.\n");
 
-  return 0;
+  return TRUE;
 }
   

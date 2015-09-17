@@ -16,7 +16,7 @@ void print_free_mem()
         while (temp != NULL) {
 	  	//int ch = temp->numNodesAhead;
 	  	seg = temp->memSegment;
-		if (seg->isFree == TRUE) { printf("i == %zu and isFree: %zd.\n", i, seg->isFree); }
+		if (seg->isFree == TRUE) { /*printf("i == %zu and isFree: %zd.\n", i, seg->isFree);*/ }
 		i++;
 		temp = (sNode*) temp->next;
 	}
@@ -48,8 +48,8 @@ ssize_t testSkipNodes()
         sNode *temp = copy_list(4);
         while (temp != NULL) {
 	  	int ch = temp->numNodesAhead;
-	        printf("i == %zu and ch: %zd.\n", i, ch);
-		//if (ch != 100 && ch != 3) {printf("Test case failed. Skip nodes are not correct.\n"); return FALSE;}
+	        //printf("i == %zu and ch: %zd.\n", i, ch);
+		if (ch != 100 && ch != 3) {printf("Test case failed. Skip nodes are not correct.\n"); return FALSE;}
 		temp = temp->skipNodes.fwd_hundredSpecialNode;
         	i++;
         }
@@ -677,47 +677,21 @@ int main()
 
 	temp = (sNode *) copy_list(4);
 
-	printf("head has this many nodes ahead: %d.\n", temp->numNodesAhead);
-
 	if (testList() != TRUE) {
 	  return FALSE;
 	}
 
-	printf("Test part 1 was successful.\n");
+	/* printf("Test part 1 was successful.\n"); */
 
 	if (testSkipNodes() != TRUE) {
 	  return FALSE;
 	}
 
-	printf("Test part 2 was successful.\n");
+	/* printf("Test part 2 was successful.\n"); */
 
-
-	/* now free some memory */
-	salfree(a0);
-	salfree(a1);
-	salfree(a68);
-	salfree(a69);
-	salfree(a70);
-
-	print_free_mem();
-
-	testSkipNodes();
+	printf("Test_300_Node.c passed.\n");
 
 	return TRUE;
-
-	salfree(a71);
-	salfree(a99);
-	salfree(a100);
-	salfree(a101);
-	salfree(a198);
-	salfree(a199);
-	salfree(a200);
-	salfree(a201);
-	salfree(a202);
-
-
-	return TRUE;
-
 }
 
 

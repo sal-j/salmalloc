@@ -64,7 +64,7 @@ int main ()
     return FALSE;
   }
 
-  printf("\n\nTest before deleting char j passed.\n\n");
+  /* printf("\n\nTest before deleting char j passed.\n\n"); */
   
   k = (char *) salmalloc(sizeof(char));
   *k = 'k';
@@ -73,5 +73,9 @@ int main ()
     return FALSE;
   }
 
-  printf("\n\nTest after adding char k passed.\n");
+  /* printf("\n\nTest after adding char k passed.\n"); */
+
+  printf("Test_Nodes_Ahead_Ints.c passed.\n");
+
+  return TRUE;
 }

@@ -32,11 +32,11 @@ ssize_t testSkipNodes()
         sNode *temp = copy_list(4);
         while (temp != NULL) {
         	int ch = temp->numNodesAhead;
-	        printf("i == %zu and ch: %zd.\n", i, ch);
-		/*if (ch != 9 && ch != 6 && ch != 0 && ch != 1 && ch != 2) {
+	        //printf("i == %zu and ch: %zd.\n", i, ch);
+		if (ch != 10 && ch != 7 && ch != 1 && ch != 3 && ch != 100) {
 		  printf("Test failed at skip nodes.\n");
 		  return FALSE;
-		  }*/
+		}
 		temp = temp->skipNodes.fwd_tenSpecialNode;
         	i++;
         }
@@ -345,17 +345,16 @@ int main()
 		return FALSE;
 	}
 
-	printf("Test part 1 was successful.\n");
+	/* printf("Test part 1 was successful.\n"); */
+
 
 	/* Check if skip nodes were addded correctly. */
 	if (testSkipNodes() != TRUE) {
 		return FALSE;
 	}
 
-	printf("Test part 2 was successful.\n");
-
+	/* printf("Test part 2 was successful.\n"); */
 	
-
 	/* Now add more elements to list */
 	a97 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a97 = 97;
@@ -371,15 +370,14 @@ int main()
 		return FALSE;
 	}
 
-	printf("Test part 3 was successful.\n");
+	/* printf("Test part 3 was successful.\n"); */
 	
 	/* Check if skip nodes were added correctly */
 	if (testSkipNodes() != TRUE) {
 		return FALSE;
 	}
 
-	printf("Test part 4 was successful.\n");
-
+	/* printf("Test part 4 was successful.\n"); */
 
 	a100 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a100 = 100;
@@ -389,15 +387,14 @@ int main()
 		return FALSE;
 	}
 
-	printf("Test part 5 was successful.\n");
+	/* printf("Test part 5 was successful.\n"); */
 
 	/* Check if elements were added correctly */
 	if (testSkipNodes() != TRUE) {
 		return FALSE;
 	}
 
-	printf("Test part 6 was successful.\n");
-
+	/* printf("Test part 6 was successful.\n"); */
 
 	a101 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a101 = 101;
@@ -410,14 +407,14 @@ int main()
 		return FALSE;
 	}
 
-	printf("Test part 7 was successful.\n");
+	/* printf("Test part 7 was successful.\n"); */
 
 	/* Check if skip nodes were addded correctly. */
 	if (testSkipNodes() != TRUE) {
 		return FALSE;
 	}
 
-	printf("Test part 8 was successful.\n");
+	/* printf("Test part 8 was successful.\n"); */
 
 	a103 =  (ssize_t *) salmalloc(sizeof(ssize_t));
 	*a103 = 103;
@@ -474,16 +471,16 @@ int main()
 		return FALSE;
 	}
 
-	printf("Test part 9 was successful.\n");
+	/* printf("Test part 9 was successful.\n"); */
 
 	/* Check if skip nodes were addded correctly. */
 	if (testSkipNodes() != TRUE) {
 		return FALSE;
 	}
 
-	printf("Test part 10 was successful.\n");
+	/* printf("Test part 10 was successful.\n"); */
 
-
+	printf("Test_100_Node_Skip_Node_Count.c passed.\n");
 
 	return TRUE;
 

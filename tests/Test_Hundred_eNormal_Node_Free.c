@@ -16,39 +16,39 @@ ssize_t testIfHundredsNodeFreedCorrectly()
   ssize_t *compare;
 
   if (temp->numNodesAhead != 100 && temp->tenNodesAhead != 10) {
-    printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead);
-    printf("Test failed at step 1 of first hundred node.");
+    /* printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead); */
+    /* printf("Test failed at step 1 of first hundred node."); */
     return FALSE;
   }
 
   salfree(a0);
 
-  printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead);
+  /* printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead); */
 
   if (temp->numNodesAhead != 99 && temp->tenNodesAhead != 9) {
-    printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead);
-    printf("Test failed at step 2 of first hundred node.");
+    /* printf("temp num nodes ahead: %d and ten Nodes ahead: %d.\n", temp->numNodesAhead, temp->tenNodesAhead); */
+    /* printf("Test failed at step 2 of first hundred node."); */
     return FALSE;
   }
 
   salfree(a60);
 
-  printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
+  /* printf("temp num nodes ahead: %d.\n", temp->numNodesAhead); */
 
   if (temp->numNodesAhead != 98) {
-    printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
-    printf("Test failed at step 3 of first hundred node.");
+    /* printf("temp num nodes ahead: %d.\n", temp->numNodesAhead); */
+    /* printf("Test failed at step 3 of first hundred node."); */
     return FALSE;
   }
 
 
   salfree(a55);
 
-  printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
+  /* printf("temp num nodes ahead: %d.\n", temp->numNodesAhead); */
 
   if (temp->numNodesAhead != 97) {
-    printf("temp num nodes ahead: %d.\n", temp->numNodesAhead);
-    printf("Test failed at step 3 of first hundred node.");
+    /* printf("temp num nodes ahead: %d.\n", temp->numNodesAhead); */
+    /* printf("Test failed at step 3 of first hundred node."); */
     return FALSE;
   }
   
@@ -445,6 +445,7 @@ int main()
 	  return FALSE;
 	}
 
+	printf("Test_Hundred_eNormal_Node_Free.c passed.\n");
 
 	return TRUE;
 
