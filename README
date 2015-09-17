@@ -1,0 +1,20 @@
+Sometime back I read on an embedded forum that using malloc on an 8051 is a bit much for that tiny machine. Before that
+while I knew how to use malloc, I didn't know how it is actually implemented. Even before that, I had read somewhere 
+about the beautiful data structure that is skip list[1][2] (Thanks to Igor!), a probablistic data structure that works almost as good as a 
+balanced binary tree but is far more easy to implement. And here it is then, a custom malloc[3], thanks to Dan for a great primer, implemented with a modified skip list.
+I think I learned a bit.
+
+Finally, to build this just clone the project and type `make`.
+
+This will compile the tests. But before you can run them, you need to export the library path like this:
+
+export LD_LIBRARY_PATH="~/projects/salmalloc/build/"
+
+And then just go to `tests/build` and run test cases.
+
+To do: Update insert. Update salfree. Add more test cases. Add regression.
+
+
+[1] https://en.wikipedia.org/wiki/Skip_list
+[2] http://igoro.com/archive/skip-lists-are-fascinating/
+[3] http://danluu.com/malloc-tutorial/
