@@ -2,13 +2,17 @@
 #include "salmalloc.h"
 
 sList memlist = {0};
-
+sList memlist_1B = {0};
+sList memlist_2B = {0};
+sList memlist_4B = {0};
 
 static void print_debug();
 
 static void countNodesAhead(sNode*, sNode*, nodeType);
 
 static sNode *test_insert();
+
+static sList *return_list_of_size(size_t);
 
 extern void link_skip_nodes(sNode *temp)
 {
@@ -472,8 +476,9 @@ extern size_t set_length()
 }
 
 
-extern sNode* copy_list()
+extern sNode* copy_list(size_t size)
 {
+  sList *ptrMemlist = return_list_of_size(size);
   return memlist.head;
 }
 
@@ -574,7 +579,7 @@ static void countNodesAhead(sNode* curr, sNode* dest, nodeType type)
 
 static sNode *test_insert(size_t sizeObject)
 {
-  sNode* temp = copy_list();
+  sNode* temp = copy_list(sizeObject);
   sNode* prev = temp;
   smem_blk_seg *seg = temp->memSegment;
     
@@ -626,4 +631,19 @@ static sNode *test_insert(size_t sizeObject)
   }
   return temp;
 
+}
+
+
+/*
+  return the correct size list
+*/
+static sList *return_list_of_size(size_t size)
+{
+  if (size == SIZE_1B) {
+    return &memlist_1B;
+  } else  if (size == SIZE_2B) {
+    return &memlist_2B;
+  } else if (size == SIZE_4B) {
+    return &memlist_4B;
+  } 
 }

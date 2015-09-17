@@ -9,6 +9,10 @@
 #define THOUSAND 1000
 #define THREE 3
 
+
+#define SIZE_1B 1
+#define SIZE_2B 2
+#define SIZE_4B 4
 #define SIZE_64 64
 #define SIZE_128 128
 #define SIZE_256 256
@@ -100,10 +104,11 @@ extern void print_skip_nodes(nodeType);
 extern size_t get_length();
 extern size_t set_length();
 extern void print_length();
-extern sNode* copy_list();
+extern sNode* copy_list(size_t);
 extern void copy_list_1(sNode*);
 extern void *skipSalmalloc(size_t);
-extern sNode* placeToInsertNode(size_t);
 extern void *insert_salmalloc(size_t);
+extern sNode* placeToInsertNode(size_t);
 extern void *parse_eNormal_Nodes(sNode *, size_t);
 extern void print_mem(sNode*);
+extern void *return_list_of_size_requested(size_t);
