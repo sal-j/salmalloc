@@ -1,7 +1,0 @@
-
-
-for each skipnode in list
-    check if nodes in front of this skipnode are free
-    	for each skipnode check if node in front is free
-	    	 if yes, populate it.
-		 if not move to next skiip node.
