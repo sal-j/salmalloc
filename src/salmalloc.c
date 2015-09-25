@@ -166,7 +166,6 @@ extern void *insert_salmalloc(size_t size)
 extern void *salmalloc(size_t size)
 {
   smem_blk_seg *seg = NULL; /* memory segment  */
-  void *sNodeLocation = NULL;
 
   /* If list is currently NULL add a new node. */
   if (memlist.head == NULL) {
@@ -189,9 +188,7 @@ extern void *salmalloc(size_t size)
 
   } else {
     
-    sNode *temp = memlist.head, *prev = NULL, *specialNode = NULL;
-    size_t flag = 0;
-    ssize_t *ch = 0;
+    sNode *temp = memlist.head;
 
     /* There are two possibilities here as to where to insert this node
        1. Either the node is free. so just return.
@@ -478,14 +475,12 @@ extern size_t set_length()
 
 extern sNode* copy_list(size_t size)
 {
-  sList *ptrMemlist = return_list_of_size(size);
   return memlist.head;
 }
 
 extern void copy_list_1(sNode *temp)
 {
   temp = (sNode*) memlist.head;
-  char *ch = temp->memSegment + sizeof(smem_blk_seg);
   printf("ch: %p.\n",  temp->memSegment + sizeof(smem_blk_seg));
 
 }
@@ -560,7 +555,6 @@ static void countNodesAhead(sNode* curr, sNode* dest, nodeType type)
 
   /* move from current to last node. */
   while(curr != dest) {
-    smem_blk_seg *seg = curr->memSegment;
     //print_mem(curr);
     /* increment count. if curr is a tenSpecialNode, check
        if it is free or not. This is important because we
@@ -580,7 +574,6 @@ static void countNodesAhead(sNode* curr, sNode* dest, nodeType type)
 static sNode *test_insert(size_t sizeObject)
 {
   sNode* temp = copy_list(sizeObject);
-  sNode* prev = temp;
   smem_blk_seg *seg = temp->memSegment;
     
   while(temp != NULL) {
@@ -646,4 +639,6 @@ static sList *return_list_of_size(size_t size)
   } else if (size == SIZE_4B) {
     return &memlist_4B;
   } 
+
+  return 0;
 }
